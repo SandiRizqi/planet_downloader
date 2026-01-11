@@ -24,13 +24,13 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the script
-COPY planet_downloader.py .
+COPY . .
 
 # Create data directory
 RUN mkdir -p /app/data
 
 # Set entrypoint
-ENTRYPOINT ["python", "planet_downloader.py"]
+ENTRYPOINT ["python", "batch_downloader.py"]
 
 # Default command shows help
 CMD ["--help"]
