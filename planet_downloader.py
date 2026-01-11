@@ -20,7 +20,7 @@ COORD = "{z}/{x}/{y}"
 def download_and_save_tile(tile, session, tmpdir, tms_url):
     try:
         url = tms_url.format(z=tile.z, x=tile.x, y=tile.y)
-        response = session.get(url, timeout=20)
+        response = session.get(url, timeout=15)
         response.raise_for_status()
         img = Image.open(BytesIO(response.content)).convert("RGB")
 
