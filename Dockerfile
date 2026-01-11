@@ -24,13 +24,13 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the script
-COPY download_tiles.py .
+COPY planet_downloader.py .
 
 # Create data directory
 RUN mkdir -p /app/data
 
 # Set entrypoint
-ENTRYPOINT ["python", "download_tiles.py"]
+ENTRYPOINT ["python", "planet_downloader.py"]
 
 # Default command shows help
 CMD ["--help"]
