@@ -38,10 +38,9 @@ def generate_month_range(start_month, end_month):
     return months
 
 
-def run_downloader(aoi_path, month, api_key, zoom, save_dir, output_name=None, dry_run=False):
-    """Run planet_downloader.py for a single month"""
+def run_downloader(aoi_path, month, api_key, zoom, save_dir, output_name=None):
     cmd = [
-        sys.executable,  # Use same Python interpreter
+        sys.executable,
         "planet_downloader.py",
         "--aoi", aoi_path,
         "--month", month,
@@ -49,18 +48,14 @@ def run_downloader(aoi_path, month, api_key, zoom, save_dir, output_name=None, d
         "--zoom", str(zoom),
         "--save-dir", save_dir
     ]
-    
+
     if output_name:
         cmd.extend(["--output-name", output_name])
-    
-    if dry_run:
-        print(f"[DRY RUN] Would execute: {' '.join(cmd)}")
-        return True, "Dry run - not executed"
-    
+
     print(f"\n{'='*60}")
     print(f"Downloading: {month}")
     print(f"{'='*60}")
-    
+
     try:
         result = subprocess.run(cmd, check=True, capture_output=True, text=True)
         print(result.stdout)
@@ -69,6 +64,7 @@ def run_downloader(aoi_path, month, api_key, zoom, save_dir, output_name=None, d
         error_msg = f"Error downloading {month}:\n{e.stderr}"
         print(error_msg, file=sys.stderr)
         return False, error_msg
+
 
 
 def main():
@@ -141,7 +137,7 @@ Examples:
     print(f"Total months: {len(months)}")
     print(f"Zoom level: {args.zoom}")
     print(f"Save directory: {args.save_dir}")
-    print(f"Dry run: {args.dry_run}")
+    # print(f"Dry run: {args.dry_run}")
     print(f"Continue on error: {args.continue_on_error}")
     print(f"Skip existing: {args.skip_existing}")
     print(f"\nMonths to download:")
@@ -149,11 +145,11 @@ Examples:
         print(f"  {i}. {month}")
     print(f"{'='*60}\n")
     
-    if not args.dry_run:
-        response = input("Proceed with download? (y/n): ")
-        if response.lower() != 'y':
-            print("Aborted by user.")
-            sys.exit(0)
+    # if not args.dry_run:
+    #     response = input("Proceed with download? (y/n): ")
+    #     if response.lower() != 'y':
+    #         print("Aborted by user.")
+    #         sys.exit(0)
     
     # Track results
     results = {
@@ -180,14 +176,14 @@ Examples:
             api_key=args.api_key,
             zoom=args.zoom,
             save_dir=args.save_dir,
-            dry_run=args.dry_run
+            # dry_run=args.dry_run
         )
         
         if success:
             results["success"].append(month)
         else:
             results["failed"].append((month, error))
-            if not args.continue_on_error and not args.dry_run:
+            if not args.continue_on_error:
                 print(f"\nStopping due to error. Use --continue-on-error to continue on failures.")
                 break
     
